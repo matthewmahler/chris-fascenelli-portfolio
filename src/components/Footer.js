@@ -32,7 +32,6 @@ const Footer = () => {
       }
     `
   )
-  console.log(contentfulLandingPage.socials)
   return (
     <Container>
       {contentfulLandingPage.socials.map((social, index) => {
