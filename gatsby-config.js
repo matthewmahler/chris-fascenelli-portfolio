@@ -1,3 +1,11 @@
+const dotenv = require("dotenv")
+const path = require("path")
+
+if (process.env.NODE_ENV !== "production") {
+  dotenv.config()
+}
+
+const { CONTENTFUL_SPACE_ID, CONTENTFUL_ACCESS_TOKEN } = process.env
 module.exports = {
   siteMetadata: {
     title: `Gatsby Default Starter`,
@@ -15,8 +23,16 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
+    {
+      resolve: `gatsby-plugin-google-fonts`,
+      options: {
+        fonts: [`limelight`],
+        display: "swap",
+      },
+    },
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    "gatsby-plugin-postcss",
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
@@ -29,6 +45,13 @@ module.exports = {
         // theme_color: `#663399`,
         display: `minimal-ui`,
         icon: `src/images/gatsby-icon.png`, // This path is relative to the root of the site.
+      },
+    },
+    {
+      resolve: `gatsby-source-contentful`,
+      options: {
+        spaceId: CONTENTFUL_SPACE_ID,
+        accessToken: CONTENTFUL_ACCESS_TOKEN,
       },
     },
     // this (optional) plugin enables Progressive Web App + Offline functionality

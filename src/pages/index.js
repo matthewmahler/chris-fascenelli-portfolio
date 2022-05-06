@@ -1,122 +1,100 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import React from "react"
+import { useStaticQuery, graphql, Link } from "gatsby"
+import { GatsbyImage } from "gatsby-plugin-image"
+import { BgImage } from "gbimage-bridge"
+import tw from "tailwind-styled-components"
+import styled from "styled-components"
+import Layout from "../components/Layout"
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
-
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-  },
-  {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
-
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
-
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
-
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
-
-const IndexPage = () => (
-  <Layout>
-    <Seo title="Home" />
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+const Container = tw.div`
+mx-auto
+min-w-full
+max-w-none
+min-h-full
+grow
+flex
+`
+const SCNeon = styled.h1`
+  text-shadow: 0px 0px 15px #06b6d4, 0px 0px 15px #8b5cf6, 0px 0px 15px #06b6d4;
+`
+const Neon = tw(SCNeon)`
+text-6xl 
+text-stone-200 
+text-center 
+font-limelight
+sm:text-5xl 
+xs:text-3xl 
+xs:mb-2
+`
+const IndexPage = () => {
+  const { contentfulLandingPage } = useStaticQuery(
+    graphql`
+      query {
+        contentfulLandingPage {
+          callToActionDestination
+          callToActionText
+          pageTitle
+          socials
+          logo {
+            filename
+            gatsbyImageData(placeholder: TRACED_SVG)
+          }
+          heroImage {
+            gatsbyImageData(placeholder: BLURRED)
+            filename
+          }
+          backgroundImage {
+            gatsbyImageData(placeholder: BLURRED)
+            filename
+          }
+        }
+      }
+    `
+  )
+  return (
+    <Layout>
+      <Container>
+        <BgImage
+          image={[
+            `linear-gradient(#1C1917EE, #1C1917cc, #1C191799)`,
+            contentfulLandingPage.backgroundImage.gatsbyImageData,
+          ]}
+          className="grow min-h-full flex flex-col justify-center items-center"
+          placeholder="blurred"
+        >
+          {/* Any content here will be centered in the component */}
+          <div className="flex flex-col justify-center items-center">
+            <div className="container mx-auto grid md:grid-cols-2 md:gap-4 items-center justify-items-center">
+              <GatsbyImage
+                image={contentfulLandingPage.logo.gatsbyImageData}
+                className="w-9/12"
+                imgStyle={{
+                  filter: "drop-shadow(0px 0px 15px #06b6d4)",
+                }}
+                placeholder="tracedSVG"
+                alt={contentfulLandingPage.logo.filename}
+              />
+              <Neon>{contentfulLandingPage.pageTitle}</Neon>
+            </div>
+            <div className="max-w-md mx-auto grid grid-cols-2 xs:gap-2 md:gap-4 my-4">
+              <Link
+                to={`/${contentfulLandingPage.callToActionDestination}`}
+                className="inline-block xs:py-2 md:py-5 xs:px-4 md:px-12 text-white xs:text-sm font-bold bg-cyan-500 hover:bg-cyan-600 rounded-full transition duration-200"
+              >
+                Contact Today
+              </Link>
+              <Link
+                to={`/${contentfulLandingPage.callToActionDestination}`}
+                className="inline-block xs:py-2 md:py-5 xs:px-4 md:px-12 text-white xs:text-sm hover:text-cyan-500 font-bold border border-gray-300 hover:border-cyan-500 rounded-full transition duration-200 text-center"
+              >
+                See Work
+              </Link>
+            </div>
+          </div>
+        </BgImage>
+      </Container>
+    </Layout>
+  )
+}
 
 export default IndexPage
